@@ -1,4 +1,7 @@
 # OpenPLC CLI
+> ⚠️ **Warning:**  
+> This project is experimental and currently under active testing.  
+> Use it **only in safe, non-production environments**.
 
 A command-line interface for OpenPLC.
 
