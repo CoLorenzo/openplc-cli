@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "openplc_cli"
+version = "1.0.0"
+description = "Command openplcv3 via command line interface"
+readme = "README.md"
+requires-python = ">=3.13.5"
+license = "MIT"
+authors = [{ name="Colorenzo", email="lorenzo2berardi@gmail.com" }]
+
+dependencies = [
+	"httpx==0.28.1",
+	"beautifulsoup4==4.14.2",
+	"backoff==2.2.1",
+	"lxml==6.0.2",
+]
+
+
+[project.scripts]
+openplc-cli = "openplc_cli.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/openplc_cli"]
+
+

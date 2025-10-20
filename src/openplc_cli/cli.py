@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 from getpass import getpass
 
-from openplc_client import OpenPLCClient, OpenPLCClientConfig
+from .pyopenplc import OpenPLCClient, OpenPLCClientConfig
 
 
 # ========= Stato persistente =========
