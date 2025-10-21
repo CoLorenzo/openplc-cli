@@ -7,6 +7,7 @@ import os
 import json
 import argparse
 from pathlib import Path
+import time
 from typing import Any, Dict, List
 from getpass import getpass
 
@@ -190,6 +191,23 @@ def cmd_status(args: argparse.Namespace) -> int:
     return with_client(args, run) or 0
 
 
+def cmd_status_onlinewait(args: argparse.Namespace) -> int:
+    def run(client: OpenPLCClient):
+        print(f"Waiting for OpenPLC server at {client.cfg.base_url} to come online...")
+        while True:
+            try:
+                status = client.status()
+                if status == "online":
+                    print(f"OpenPLC server at {client.cfg.base_url} is online.")
+                    break
+                else:
+                    print(f"Server status: {status}. Retrying in 5 seconds...")
+            except Exception as e:
+                print(f"Error checking server status: {e}. Retrying in 5 seconds...")
+            time.sleep(5)
+    return with_client(args, run) or 0
+
+
 # ========= Parser =========
 
 def build_parser() -> argparse.ArgumentParser:
@@ -270,8 +288,15 @@ def build_parser() -> argparse.ArgumentParser:
 
     # status
     p_status = sub.add_parser("status", help="Verifica stato dell'istanza (online/offline via HTTP 302 sulla root)")
-    add_global_args(p_status)
-    p_status.set_defaults(func=cmd_status)
+    sub_status = p_status.add_subparsers(dest="status_cmd", required=True)
+
+    p_status_check = sub_status.add_parser("check", help="Verifica stato corrente")
+    add_global_args(p_status_check)
+    p_status_check.set_defaults(func=cmd_status)
+
+    p_status_onlinewait = sub_status.add_parser("onlinewait", help="Attende che il server OpenPLC sia online")
+    add_global_args(p_status_onlinewait)
+    p_status_onlinewait.set_defaults(func=cmd_status_onlinewait)
 
 
     return ap
