@@ -80,6 +80,7 @@ def with_client(args: argparse.Namespace, fn):
     cfg = OpenPLCClientConfig(
         base_url=args.host,
         cookie_path=args.cookie,
+        follow_redirects=False,
         timeout_s=args.timeout,
         default_headers={"Referer": args.host, "Origin": args.host},
     )
@@ -180,6 +181,7 @@ def cmd_plc_stop(args: argparse.Namespace) -> int:
 
 def cmd_status(args: argparse.Namespace) -> int:
     def run(client: OpenPLCClient):
+        print(f"DEBUG: cmd_status - client base_url: {client.cfg.base_url}")
         s = client.status()  # ritorna "online" oppure "offline"
         if args.json:
             print(json.dumps({"status": s}, indent=2, ensure_ascii=False))
@@ -277,8 +279,10 @@ def build_parser() -> argparse.ArgumentParser:
 
 def _resolve_defaults(args: argparse.Namespace) -> None:
     st = _load_state()
+    print(f"DEBUG: _resolve_defaults - args.host before state: {getattr(args, "host", None)}")
     if not getattr(args, "host", None):
         args.host = st.get("host", "http://localhost:8080")
+    print(f"DEBUG: _resolve_defaults - args.host after state: {args.host}")
     if not getattr(args, "cookie", None):
         args.cookie = st.get("cookie") if st.get("host") == args.host else None
     if not args.cookie:
