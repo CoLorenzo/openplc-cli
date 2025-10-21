@@ -88,6 +88,22 @@ class OpenPLCClient:
         # opzionalmente verifica di essere autenticato controllando redirect o una view
         # qui lasciamo semplice, i cookie sono già memorizzati nel client
 
+
+    # ---------- Status check ----------
+     def status(self) -> str:
+        """
+        Effettua una richiesta GET alla root del server e ritorna 'online' se risponde 302, altrimenti 'offline'.
+        """
+        try:
+            r = self.client.get("/")
+            if r.status_code == 302:
+                return "online"
+            else:
+                return "offline"
+        except httpx.RequestError:
+            return "offline"
+
+    
     # ---------- Modbus: lista + add ----------
     def list_modbus_devices(self) -> List[Dict[str, str]]:
         """
@@ -321,6 +337,8 @@ if __name__ == "__main__":
     sub.add_parser("start")
     sub.add_parser("stop")
     sub.add_parser("logs")
+    sub.add_parser("status")
+
 
     args = ap.parse_args()
 
@@ -363,6 +381,8 @@ if __name__ == "__main__":
             print("PLC stoppato.")
         elif args.cmd == "logs":
             print(cli.runtime_logs())
+        elif args.cmd == "status":
+            print(cli.status())
     finally:
         cli.close()
 
