@@ -178,6 +178,15 @@ def cmd_plc_stop(args: argparse.Namespace) -> int:
         print("PLC stoppato.")
     return with_client(args, run) or 0
 
+def cmd_status(args: argparse.Namespace) -> int:
+    def run(client: OpenPLCClient):
+        s = client.status()  # ritorna "online" oppure "offline"
+        if args.json:
+            print(json.dumps({"status": s}, indent=2, ensure_ascii=False))
+        else:
+            print(s)
+    return with_client(args, run) or 0
+
 
 # ========= Parser =========
 
@@ -256,6 +265,12 @@ def build_parser() -> argparse.ArgumentParser:
     p_plc_stop = sub_plc.add_parser("stop", help="Stop PLC")
     add_global_args(p_plc_stop)
     p_plc_stop.set_defaults(func=cmd_plc_stop)
+
+    # status
+    p_status = sub.add_parser("status", help="Verifica stato dell'istanza (online/offline via HTTP 302 sulla root)")
+    add_global_args(p_status)
+    p_status.set_defaults(func=cmd_status)
+
 
     return ap
 
