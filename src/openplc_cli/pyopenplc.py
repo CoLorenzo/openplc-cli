@@ -90,7 +90,7 @@ class OpenPLCClient:
 
 
     # ---------- Status check ----------
-     def status(self) -> str:
+    def status(self) -> str:
         """
         Effettua una richiesta GET alla root del server e ritorna 'online' se risponde 302, altrimenti 'offline'.
         """
