@@ -190,7 +190,7 @@ def cmd_status(args: argparse.Namespace) -> int:
     return with_client(args, run) or 0
 
 
-def cmd_status_onlinewait(args: argparse.Namespace) -> int:
+def cmd_status_wait(args: argparse.Namespace) -> int:
     def run(client: OpenPLCClient):
         print(f"Waiting for OpenPLC server at {client.cfg.base_url} to come online...")
         while True:
@@ -293,9 +293,9 @@ def build_parser() -> argparse.ArgumentParser:
     add_global_args(p_status_check)
     p_status_check.set_defaults(func=cmd_status)
 
-    p_status_onlinewait = sub_status.add_parser("onlinewait", help="Attende che il server OpenPLC sia online")
-    add_global_args(p_status_onlinewait)
-    p_status_onlinewait.set_defaults(func=cmd_status_onlinewait)
+    p_status_wait = sub_status.add_parser("wait", help="Attende che il server OpenPLC sia online")
+    add_global_args(p_status_wait)
+    p_status_wait.set_defaults(func=cmd_status_wait)
 
 
     return ap
