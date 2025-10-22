@@ -96,7 +96,7 @@ class OpenPLCClient:
         """
         try:
             print(f"DEBUG: OpenPLCClient.status - Requesting URL: {self.cfg.base_url}")
-            response = self.client.get(self.cfg.base_url, follow_redirects=False)
+            response = self.client.get(self.cfg.base_url)
             print(f"DEBUG: OpenPLCClient.status - HTTP status code: {response.status_code}")
             if response.status_code in [200, 302]:
                 return "online"

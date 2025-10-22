@@ -81,7 +81,6 @@ def with_client(args: argparse.Namespace, fn):
     cfg = OpenPLCClientConfig(
         base_url=args.host,
         cookie_path=args.cookie,
-        follow_redirects=False,
         timeout_s=args.timeout,
         default_headers={"Referer": args.host, "Origin": args.host},
     )
